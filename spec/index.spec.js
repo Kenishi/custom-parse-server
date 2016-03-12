@@ -168,4 +168,16 @@ describe('server', () => {
       done();
     })
   });
+
+  it('fails if the session length is not a number', (done) => {
+    expect(() => setServerConfiguration({
+      serverURL: 'http://localhost:8378/1',
+      appId: 'test',
+      appName: 'unused',
+      javascriptKey: 'test',
+      masterKey: 'test',
+      sessionLength: 'test'
+    })).toThrow('Session length must be a valid number.');
+    done();
+  });
 });
