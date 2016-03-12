@@ -728,7 +728,7 @@ RestWrite.prototype.runDatabaseOperation = function() {
     // Change the session expiresAt
     if(this.className === '_Session' && this.data.expiresAt && this.config.sessionLength) {
       var time = new Date();
-      time = new Date(time.getTime() + this.config.sessionLength);
+      time = new Date(time.getTime() + (this.config.sessionLength*1000));
       this.data.expiresAt.iso = time.toISOString();
     }
 
