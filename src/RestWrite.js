@@ -724,6 +724,14 @@ RestWrite.prototype.runDatabaseOperation = function() {
       ACL['*'] = { read: true, write: false };
       this.data.ACL = ACL;
     }
+
+    // Change the session expiresAt
+    if(this.className === '_Session' && this.data.expiresAt && this.config.sessionLength) {
+      var time = new Date();
+      time = new Date(time.getTime() + this.config.sessionLength);
+      this.data.expiresAt.iso = time.toISOString();
+    }
+
     // Run a create
     return this.config.database.create(this.className, this.data, this.runOptions)
       .then(() => {

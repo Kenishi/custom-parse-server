@@ -36,6 +36,7 @@ export class Config {
     this.authDataManager = cacheInfo.authDataManager;
     this.customPages = cacheInfo.customPages || {};
     this.mount = mount;
+    this.sessionLength = cacheInfo.sessionLength;
   }
   
   static validate(options) {

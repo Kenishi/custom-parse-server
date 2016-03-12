@@ -108,6 +108,7 @@ function ParseServer({
     choosePassword: undefined,
     passwordResetSuccess: undefined
   },
+  sessionLength: sessionLength,
 }) {
   setFeature('serverVersion', parseServerPackage.version);
   // Initialize the node client SDK automatically
@@ -152,6 +153,11 @@ function ParseServer({
   const hooksController = new HooksController(appId, collectionPrefix);
   const userController = new UserController(emailControllerAdapter, appId, { verifyUserEmails });
 
+  // Validate session length, default to 1 year if not set
+  sessionLength = Number(sessionLength)
+  if(isNaN(sessionLength) || sessionLength <= 0) {
+    sessionLength = 31536000000;
+  }
 
   cache.apps.set(appId, {
     masterKey: masterKey,
@@ -174,6 +180,7 @@ function ParseServer({
     appName: appName,
     publicServerURL: publicServerURL,
     customPages: customPages,
+    sessionLength: sessionLength,
   });
 
   // To maintain compatibility. TODO: Remove in some version that breaks backwards compatability
