@@ -36,6 +36,7 @@ export class Config {
     this.authDataManager = cacheInfo.authDataManager;
     this.customPages = cacheInfo.customPages || {};
     this.mount = mount;
+
     this.sessionLength = cacheInfo.sessionLength;
   }
   
@@ -43,6 +44,8 @@ export class Config {
     this.validateEmailConfiguration({verifyUserEmails: options.verifyUserEmails, 
                                 appName: options.appName, 
                                 publicServerURL: options.publicServerURL})
+
+    this.validateSessionLength(options.sessionLength);
   }
   
   static validateEmailConfiguration({verifyUserEmails, appName, publicServerURL}) {
@@ -53,6 +56,12 @@ export class Config {
       if (typeof publicServerURL !== 'string') {
         throw 'A public server url is required when using email verification.';
       }
+    }
+  }
+
+  static validateSessionLength(sessionLength) {
+    if(isNaN(sessionLength)) {
+      throw 'Session length must be a valid number.';
     }
   }
 
