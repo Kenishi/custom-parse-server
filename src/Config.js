@@ -36,8 +36,8 @@ export class Config {
     this.authDataManager = cacheInfo.authDataManager;
     this.customPages = cacheInfo.customPages || {};
     this.mount = mount;
-
     this.sessionLength = cacheInfo.sessionLength;
+    this.generateSessionExpiresAt = this.generateSessionExpiresAt.bind(this);
   }
   
   static validate(options) {
@@ -63,6 +63,11 @@ export class Config {
     if(isNaN(sessionLength)) {
       throw 'Session length must be a valid number.';
     }
+  }
+
+  generateSessionExpiresAt() {
+    var now = new Date();
+    return new Date(now.getTime() + (this.sessionLength*1000));
   }
 
   get invalidLinkURL() {

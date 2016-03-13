@@ -315,8 +315,7 @@ RestWrite.prototype.transformUser = function() {
     var token = 'r:' + cryptoUtils.newToken();
     this.storage['token'] = token;
     promise = promise.then(() => {
-      var expiresAt = new Date();
-      expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+      var expiresAt = this.config.generateSessionExpiresAt();
       var sessionData = {
         sessionToken: token,
         user: {
@@ -465,8 +464,7 @@ RestWrite.prototype.handleSession = function() {
 
   if (!this.query && !this.auth.isMaster) {
     var token = 'r:' + cryptoUtils.newToken();
-    var expiresAt = new Date();
-    expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+    var expiresAt = this.config.generateSessionExpiresAt();
     var sessionData = {
       sessionToken: token,
       user: {
@@ -723,13 +721,6 @@ RestWrite.prototype.runDatabaseOperation = function() {
       ACL[this.data.objectId] = { read: true, write: true };
       ACL['*'] = { read: true, write: false };
       this.data.ACL = ACL;
-    }
-
-    // Change the session expiresAt
-    if(this.className === '_Session' && this.data.expiresAt && this.config.sessionLength) {
-      var time = new Date();
-      time = new Date(time.getTime() + (this.config.sessionLength*1000));
-      this.data.expiresAt.iso = time.toISOString();
     }
 
     // Run a create

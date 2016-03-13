@@ -287,7 +287,6 @@ describe('rest create', () => {
     var sessionLength = 3600, // 1 Hour ahead
         now = new Date(); // For reference later
     config.sessionLength = sessionLength;
-    
 
     rest.create(config, auth.nobody(config), '_User', user)
       .then((r) => {
