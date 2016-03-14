@@ -75,6 +75,7 @@ addParseCloud();
 // "restAPIKey": optional key from Parse dashboard
 // "javascriptKey": optional key from Parse dashboard
 // "push": optional key from configure push
+// "sessionLength": optional length in seconds for how long Sessions should be valid for
 
 function ParseServer({
   appId = requiredParameter('You must provide an appId!'),

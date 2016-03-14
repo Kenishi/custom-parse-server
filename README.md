@@ -175,6 +175,7 @@ The client keys used with Parse are no longer necessary with Parse Server. If yo
 * `enableAnonymousUsers` - Set to false to disable anonymous users. Defaults to true.
 * `allowClientClassCreation` - Set to false to disable client class creation. Defaults to true.
 * `oauth` - Used to configure support for [3rd party authentication](https://github.com/ParsePlatform/parse-server/wiki/Parse-Server-Guide#oauth).
+* `sessionLength` - The length of time in seconds that a session should be valid for. Defaults to 31536000 seconds (1 year).
 
 ### Using environment variables to configure Parse Server
 
