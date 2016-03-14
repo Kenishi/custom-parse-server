@@ -63,6 +63,9 @@ export class Config {
     if(isNaN(sessionLength)) {
       throw 'Session length must be a valid number.';
     }
+    else if(sessionLength <= 0) {
+      throw 'Session length must be a value greater than 0.'
+    }
   }
 
   generateSessionExpiresAt() {
