@@ -1,7 +1,8 @@
 // An object that encapsulates everything we need to run a 'find'
 // operation, encoded in the REST API format.
 
-var Parse = require('parse/node').Parse;
+var Parse = require('parse/node').Parse,
+    triggers = require('./triggers');
 
 import { default as FilesController } from './Controllers/FilesController';
 
