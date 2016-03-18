@@ -119,6 +119,9 @@ RestQuery.prototype.execute = function() {
   }).then(() => {
     return this.handleInclude();
   }).then(() => {
+    return this.runAfterTrigger();
+  })
+  .then(() => {
     return this.response;
   });
 };
@@ -439,6 +442,24 @@ RestQuery.prototype.handleInclude = function() {
 
   return pathResponse;
 };
+
+RestQuery.prototype.runAfterTrigger = function() {
+  if(!this.response || !this.response.results) {
+    return;
+  }
+
+  // Avoid doing any setup for triggers if there is no 'afterFind' trigger for this class.
+  if (!triggers.triggerExists(this.className, triggers.Types.afterFind, this.config.applicationId)) {
+    return Promise.resolve();
+  }
+
+  // Add the className to the response so trigger lookup can occur later
+  this.response.className = this.className;
+
+  return Promise.resolve().then(() => {
+    return triggers.maybeRunTrigger(triggers.Types.afterFind, this.auth, this.response, null, this.config.applicationId);
+  });
+}
 
 // Adds included values to the response.
 // Path is a list of field names.

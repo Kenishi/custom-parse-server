@@ -6,7 +6,8 @@ export const Types = {
   beforeSave: 'beforeSave',
   afterSave: 'afterSave',
   beforeDelete: 'beforeDelete',
-  afterDelete: 'afterDelete'
+  afterDelete: 'afterDelete',
+  afterFind: 'afterFind',
 };
 
 const baseStore = function() {
