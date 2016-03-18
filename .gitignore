@@ -35,8 +35,8 @@ node_modules
 # visual studio code
 .vscode
 
-# Babel.js
-lib/
+# Babel.js - For module use. the ES6 _MUST_ be translated before pusing
+#lib/
 
 # cache folder
 .cache
