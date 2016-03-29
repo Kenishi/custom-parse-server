@@ -22,7 +22,7 @@ export class Config {
     this.facebookAppIds = cacheInfo.facebookAppIds;
     this.allowClientClassCreation = cacheInfo.allowClientClassCreation;
     this.database = DatabaseAdapter.getDatabaseConnection(applicationId, cacheInfo.collectionPrefix);
-    
+
     this.serverURL = cacheInfo.serverURL;
     this.publicServerURL = cacheInfo.publicServerURL;
     this.verifyUserEmails = cacheInfo.verifyUserEmails;
@@ -38,16 +38,17 @@ export class Config {
     this.mount = mount;
     this.sessionLength = cacheInfo.sessionLength;
     this.generateSessionExpiresAt = this.generateSessionExpiresAt.bind(this);
+    this.liveQueryController = cacheInfo.liveQueryController;
   }
-  
+
   static validate(options) {
-    this.validateEmailConfiguration({verifyUserEmails: options.verifyUserEmails, 
-                                appName: options.appName, 
+    this.validateEmailConfiguration({verifyUserEmails: options.verifyUserEmails,
+                                appName: options.appName,
                                 publicServerURL: options.publicServerURL})
 
     this.validateSessionLength(options.sessionLength);
   }
-  
+
   static validateEmailConfiguration({verifyUserEmails, appName, publicServerURL}) {
     if (verifyUserEmails) {
       if (typeof appName !== 'string') {
@@ -76,23 +77,23 @@ export class Config {
   get invalidLinkURL() {
     return this.customPages.invalidLink || `${this.publicServerURL}/apps/invalid_link.html`;
   }
-  
+
   get verifyEmailSuccessURL() {
     return this.customPages.verifyEmailSuccess || `${this.publicServerURL}/apps/verify_email_success.html`;
   }
-  
+
   get choosePasswordURL() {
     return this.customPages.choosePassword || `${this.publicServerURL}/apps/choose_password`;
   }
-  
+
   get requestResetPasswordURL() {
     return `${this.publicServerURL}/apps/${this.applicationId}/request_password_reset`;
   }
-  
+
   get passwordResetSuccessURL() {
     return this.customPages.passwordResetSuccess || `${this.publicServerURL}/apps/password_reset_success.html`;
   }
-  
+
   get verifyEmailURL() {
     return `${this.publicServerURL}/apps/${this.applicationId}/verify_email`;
   }
