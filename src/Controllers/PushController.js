@@ -52,11 +52,10 @@ export class PushController extends AdaptableController {
     let badgeUpdate = () => {
       return Promise.resolve();
     }
-
     if (body.data && body.data.badge) {
       let badge = body.data.badge;
       let op = {};
-      if (badge == "Increment") {
+      if (typeof badge == 'string' && badge.toLowerCase() === 'increment') {
         op = { $inc: { badge: 1 } }
       } else if (Number(badge)) {
         op = { $set: { badge: badge } }
@@ -89,15 +88,21 @@ export class PushController extends AdaptableController {
     }).then(() => {
       return rest.find(config, auth, '_Installation', where);
     }).then((response) => {
-      pushStatus.setRunning();
+      if (!response.results) {
+        return Promise.reject({error: 'PushController: no results in query'})
+      }
+      pushStatus.setRunning(response.results);
       return this.sendToAdapter(body, response.results, pushStatus, config);
     }).then((results) => {
       return pushStatus.complete(results);
+    }).catch((err) => {
+      pushStatus.fail(err);
+      return Promise.reject(err);
     });
   }
 
   sendToAdapter(body, installations, pushStatus, config) {
-    if (body.data && body.data.badge && body.data.badge == "Increment") {
+    if (body.data && body.data.badge && typeof body.data.badge == 'string' && body.data.badge.toLowerCase() == "increment") {
       // Collect the badges to reduce the # of calls
       let badgeInstallationsMap = installations.reduce((map, installation) => {
         let badge = installation.badge;

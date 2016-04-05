@@ -9,8 +9,11 @@ var batch = require('./batch'),
     middlewares = require('./middlewares'),
     multer = require('multer'),
     Parse = require('parse/node').Parse,
+    path = require('path'),
     authDataManager = require('./authDataManager');
 
+import { logger,
+      configureLogger }       from './logger';
 import cache                    from './cache';
 import Config                   from './Config';
 import parseServerPackage       from '../package.json';
@@ -73,6 +76,7 @@ addParseCloud();
 // "restAPIKey": optional key from Parse dashboard
 // "javascriptKey": optional key from Parse dashboard
 // "push": optional key from configure push
+// "sessionLength": optional length in seconds for how long Sessions should be valid for
 
 class ParseServer {
 
@@ -84,6 +88,7 @@ class ParseServer {
     filesAdapter,
     push,
     loggerAdapter,
+    logsFolder,
     databaseURI = DatabaseAdapter.defaultDatabaseURI,
     databaseOptions,
     cloud,
@@ -115,6 +120,12 @@ class ParseServer {
     Parse.initialize(appId, javascriptKey || 'unused', masterKey);
     Parse.serverURL = serverURL;
 
+    if (logsFolder) {
+      configureLogger({
+        logsFolder
+      })
+    }
+
     if (databaseAdapter) {
       DatabaseAdapter.setAdapter(databaseAdapter);
     }
@@ -132,7 +143,7 @@ class ParseServer {
       if (typeof cloud === 'function') {
         cloud(Parse)
       } else if (typeof cloud === 'string') {
-        require(cloud);
+        require(path.resolve(process.cwd(), cloud));
       } else {
         throw "argument 'cloud' must either be a string or a function";
       }
@@ -178,7 +189,7 @@ class ParseServer {
       customPages: customPages,
       maxUploadSize: maxUploadSize,
       liveQueryController: liveQueryController,
-      sessionLength : sessionLength
+      sessionLength : Number(sessionLength),
     });
 
     // To maintain compatibility. TODO: Remove in some version that breaks backwards compatability
@@ -253,7 +264,7 @@ class ParseServer {
     if (!process.env.TESTING) {
       process.on('uncaughtException', (err) => {
         if ( err.code === "EADDRINUSE" ) { // user-friendly message for this common error
-          console.log(`Unable to listen on port ${err.port}. The port is already in use.`);
+          console.error(`Unable to listen on port ${err.port}. The port is already in use.`);
           process.exit(0);
         } else {
           throw err;
